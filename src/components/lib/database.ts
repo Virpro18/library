@@ -18,7 +18,8 @@ type database = {
 // };
 
 export const jsonDatabase = async (data?: database) => {
-  const rawJson = await fetch("http://localhost:3000/api/database/recieveData", {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL || "http://localhost:3000";
+  const rawJson = await fetch(`${baseUrl}/api/database/recieveData`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
