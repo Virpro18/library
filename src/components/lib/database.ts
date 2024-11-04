@@ -1,32 +1,63 @@
-// import { createClient } from "@supabase/supabase-js";
-// const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-// const key = process.env.NEXT_PUBLIC_SUPABASE_PASS;
+// ... existing code ...
 
-type database = {
-  data: string;
+type DatabaseAction =
+  | "recieveData"
+  | "writeData"
+  | "deleteData"
+  | "updateData"
+  | "selectData";
+type DatabaseData = {
+  name?: string;
+  id?:number;
+};
+interface TargetItem {
+  name: string;
+  description: string;
+  url: string;
+  targetedData?: string | number;
+}
+const jsonDatabase = async (action: DatabaseAction, data?: unknown) => {
+  console.log(data);
+  console.log(action);
+
+  // Definisikan URL utama dan fallback
+  const urls = [
+    process.env.NEXT_PUBLIC_BASE_API_URL,
+    "http://localhost:3000",
+  ].filter(Boolean); // Menghapus nilai undefined jika variabel env tidak diatur
+
+  // Fungsi pembantu untuk melakukan fetch
+  const fetchData = async (url: string|undefined) => {
+    const response = await fetch(`${url}/api/database/${action}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok)
+      throw new Error(`Fetch failed with status: ${response.status}`);
+    return response.json();
+  };
+
+  // Coba fetch dengan URL utama, lalu fallback jika gagal
+  for (const url of urls) {
+    try {
+      return await fetchData(url);
+    } catch {
+      console.error(`Error fetching from ${url}:`);
+    }
+  }
+
+  // Mengembalikan pesan error jika semua percobaan gagal
+  return "error";
 };
 
-// if (!url || !key) {
-//   throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_URL");
-// }
-// export const supaBase = createClient(url, key);
-
-// export const database = async (db: string, col: string = "") => {
-//   const data = await supaBase.from(`${db}`).select(`${col}`);
-//   console.log(data);
-//   return data;
-// };
-
-export const jsonDatabase = async (data?: database) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_API_URL || "http://localhost:3000";
-  const rawJson = await fetch(`${baseUrl}/api/database/recieveData`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-  const datas = await rawJson.json();
-  // console.log(datas);
-  return datas;
+export const jinx = {
+  select: (data?: DatabaseData) => jsonDatabase("selectData", data),
+  insert: (data: TargetItem) => jsonDatabase("writeData", data),
+  update: (data: TargetItem) => jsonDatabase("updateData", data),
+  delete: (data: TargetItem) => jsonDatabase("deleteData", data),
+  search: (data: TargetItem) => jsonDatabase("selectData", data),
 };

@@ -1,16 +1,37 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import getJson from "@/components/lib/getJson";
+import { LibraryItem } from "@/types/database";
 import path from "path";
 
-export async function POST() {
-  // const body = await req.json(); // Parse the request body
-  // console.log(body);
-  // Get the JSON file
-  const jsonDir = path.join(process.cwd(), "data") + "/library.json";
-  console.log({ jsonDir, path: process.cwd() });
+export async function POST(req: NextRequest) {
+  const jsonDir = path.join(process.cwd(), "data", "library.json");
   const { data } = await getJson(jsonDir);
-  return NextResponse.json(
-    { data },
-    { status: 200 }
-  );
+  try {
+    const body: Partial<LibraryItem> = await req.json();
+
+    if (!body) {
+      return NextResponse.json({ error: "An error occurred" }, { status: 500 });
+    }
+
+    let result;
+    console.log(body);
+
+
+    if (body.id) {
+      result = data.find((item) => item.id === body.id);
+    }
+
+    if (body.name) {
+      const keyword = body.name.toLowerCase();
+      console.log("Searching for keyword:", keyword);
+
+      result = data.filter((item) => item.name.toLowerCase().includes(keyword));
+    }
+
+    console.log("Search results:", result);
+
+    return NextResponse.json({ result }, { status: 200 });
+  } catch {
+    return NextResponse.json({ data }, { status: 200 });
+  }
 }

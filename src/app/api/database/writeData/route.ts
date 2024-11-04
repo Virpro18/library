@@ -21,7 +21,9 @@ export async function POST(req: NextRequest) {
     const jsonDir = path.join(process.cwd(), "data", "library.json");
 
     // Read existing data from the JSON file
-    const { data } = await getJson(jsonDir);
+    const datas = await getJson(jsonDir);
+    const {data} = datas
+    let {length} = datas
 
     // Generate a new ID for the new entry
     const newId = data.length > 0 ? data[data.length - 1].id + 1 : 1;
@@ -34,12 +36,13 @@ export async function POST(req: NextRequest) {
       url: body.url || "kosong",
       created_at: date(),
     };
+    length = data.length
 
     // Add the new data to the existing data array
     data.push(newData);
 
     // Write the updated data back to the JSON file
-    await fs.writeFile(jsonDir, JSON.stringify({ data }, null, 2), "utf-8");
+    await fs.writeFile(jsonDir, JSON.stringify({ length,data }, null, 2), "utf-8");
 
     // Return a success response
     return NextResponse.json({ message: "Data added successfully", data });
