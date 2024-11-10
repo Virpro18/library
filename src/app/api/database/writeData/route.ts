@@ -1,42 +1,37 @@
 import { promises as fs } from "fs";
 import { NextRequest, NextResponse } from "next/server";
+import { ApiItem } from "@/types/database";
+import {v4 as uuidv4} from "uuid";
 import { date } from "@/utility/date";
 import path from "path";
 import getJson from "@/components/lib/getJson";
 
 // Define the structure of library data
-type LibData = {
-  name: string;
-  description: string;
-  url: string;
-};
-
 export async function POST(req: NextRequest) {
   try {
     // Parse the request body
-    const body: LibData = await req.json();
+    const body: ApiItem = await req.json();
     console.log(body);
 
     // Get the path to the JSON file
-    const jsonDir = path.join(process.cwd(), "data", "library.json");
+    const jsonDir = path.join(process.cwd(), "data", `${body.database}.json`);
 
     // Read existing data from the JSON file
     const datas = await getJson(jsonDir);
     const {data} = datas
-    let {length} = datas
 
     // Generate a new ID for the new entry
-    const newId = data.length > 0 ? data[data.length - 1].id + 1 : 1;
+    const newId = uuidv4()
 
     // Create a new data entry
     const newData = {
       id: newId,
-      name: body.name || "test",
-      description: body.description || "test",
-      url: body.url || "kosong",
+      name: body.data.name || "test",
+      description: body.data.description || "test",
+      url: body.data.url || "kosong",
       created_at: date(),
     };
-    length = data.length
+    datas.length = data.length
 
     // Add the new data to the existing data array
     data.push(newData);

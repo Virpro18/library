@@ -1,63 +1,44 @@
-// ... existing code ...
+import { LibraryItem } from "@/types/database";
 
-type DatabaseAction =
-  | "recieveData"
-  | "writeData"
-  | "deleteData"
-  | "updateData"
-  | "selectData";
-type DatabaseData = {
+type DatabaseAction = "recieveData" | "writeData" | "deleteData" | "updateData" | "selectData";
+
+interface DatabaseData {
   name?: string;
-  id?:number;
-};
-interface TargetItem {
-  name: string;
-  description: string;
-  url: string;
-  targetedData?: string | number;
+  id?: number;
 }
-const jsonDatabase = async (action: DatabaseAction, data?: unknown) => {
-  console.log(data);
-  console.log(action);
 
-  // Definisikan URL utama dan fallback
-  const urls = [
-    process.env.NEXT_PUBLIC_BASE_API_URL,
-    "http://localhost:3000",
-  ].filter(Boolean); // Menghapus nilai undefined jika variabel env tidak diatur
+const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL || "https://nanlib.vercel.app";
 
-  // Fungsi pembantu untuk melakukan fetch
-  const fetchData = async (url: string|undefined) => {
-    const response = await fetch(`${url}/api/database/${action}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+async function fetchData(url: string, data: unknown) {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+    cache: "no-cache",
+  });
 
-    if (!response.ok)
-      throw new Error(`Fetch failed with status: ${response.status}`);
-    return response.json();
-  };
-
-  // Coba fetch dengan URL utama, lalu fallback jika gagal
-  for (const url of urls) {
-    try {
-      return await fetchData(url);
-    } catch {
-      console.error(`Error fetching from ${url}:`);
-    }
+  if (!response.ok) {
+    throw new Error(`Fetch failed with status: ${response.status}`);
   }
 
-  // Mengembalikan pesan error jika semua percobaan gagal
-  return "error";
-};
+  return response.json();
+}
+
+async function jsonDatabase(action: DatabaseAction, database: string, data?: unknown) {
+  const requestData = { database, data };
+  console.log(requestData);
+
+  try {
+    return await fetchData(`${BASE_API_URL}/api/database/${action}`, requestData);
+  } catch (error) {
+    console.error(`Error fetching from ${BASE_API_URL}:`, error);
+  }
+}
 
 export const jinx = {
-  select: (data?: DatabaseData) => jsonDatabase("selectData", data),
-  insert: (data: TargetItem) => jsonDatabase("writeData", data),
-  update: (data: TargetItem) => jsonDatabase("updateData", data),
-  delete: (data: TargetItem) => jsonDatabase("deleteData", data),
-  search: (data: TargetItem) => jsonDatabase("selectData", data),
+  select: (database: string, data?: DatabaseData) => jsonDatabase("selectData", database, data),
+  // data type need to be fixed
+  insert: (database: string, data: Partial<LibraryItem>) => jsonDatabase("writeData", database, data),
+  update: (database: string, data: Partial<LibraryItem>) => jsonDatabase("updateData", database, data),
+  delete: (database: string, data: Partial<LibraryItem>) => jsonDatabase("deleteData", database, data),
 };
