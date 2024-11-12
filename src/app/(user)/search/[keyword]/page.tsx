@@ -9,7 +9,7 @@ const searchPage = async ({
 }) => {
   const rawKeyword = (await params).keyword;
   if(rawKeyword === "Admin") {
-    return redirect("/addData")
+    return redirect("/dashboard")
   }
   const keyword = decodeURI(rawKeyword)
   // console.log(`keyword: ${keyword}`)

@@ -1,14 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
 
 const LoginInput = () => {
+  const Router = useRouter()
   const [User, setUser] = useState("");
   const [Pass, setPass] = useState("");
-  const router = useRouter();
 
-  const HandleSubmit = useCallback(
+  const HandleSubmit = 
     (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       console.log(User, Pass);
@@ -21,15 +21,10 @@ const LoginInput = () => {
         body: JSON.stringify({ username: User, password: Pass }),
       }).then((res) => {
         if (res.ok) {
-          router.push("/dashboard");
+          Router.push("/dashboard")
         }
       });
-    },
-    [User, Pass,router]
-  );
-  useEffect(() => {
-    router.prefetch("/dashboard");
-  }, [router]);
+    }
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value);
