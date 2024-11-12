@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   // Mengambil cookie menggunakan request.cookies
-  const userToken = request.cookies.get("user-token");
+  const userToken = request.cookies.get("admin");
 
   // Jika cookie tidak ditemukan, redirect ke halaman login
   if (!userToken) {
@@ -14,5 +14,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher : "/addData"
+  matcher : "/dashboard/:path*"
 }

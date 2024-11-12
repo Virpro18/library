@@ -1,10 +1,11 @@
 import { LibraryItem } from "@/types/database";
 
-type DatabaseAction = "recieveData" | "writeData" | "deleteData" | "updateData" | "selectData";
 
 interface DatabaseData {
   name?: string;
   id?: number;
+  username?:string;
+  pasword?:string;
 }
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL || "https://nanlib.vercel.app";
@@ -24,9 +25,9 @@ async function fetchData(url: string, data: unknown) {
   return response.json();
 }
 
-async function jsonDatabase(action: DatabaseAction, database: string, data?: unknown) {
+async function jsonDatabase(action:string, database?: string, data?: unknown) {
   const requestData = { database, data };
-  console.log(requestData);
+  // console.log(requestData);
 
   try {
     return await fetchData(`${BASE_API_URL}/api/database/${action}`, requestData);
@@ -41,4 +42,5 @@ export const jinx = {
   insert: (database: string, data: Partial<LibraryItem>) => jsonDatabase("writeData", database, data),
   update: (database: string, data: Partial<LibraryItem>) => jsonDatabase("updateData", database, data),
   delete: (database: string, data: Partial<LibraryItem>) => jsonDatabase("deleteData", database, data),
+  loginAdmin: ( data: Partial<LibraryItem>) => jsonDatabase("adminData", "admin", data)
 };

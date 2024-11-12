@@ -5,6 +5,7 @@ export interface LibraryItem {
   description: string;
   url: string;
   created_at: Date | string;
+  [key: string]: string | Date | string[]
 }
 export interface ApiItem {
   database: string;
