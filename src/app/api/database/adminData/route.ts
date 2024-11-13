@@ -30,3 +30,10 @@ export const POST = async (req: NextRequest) => {
   })
   return NextResponse.json({status:"succes"}, { status: 200 });
 };
+
+/*
+TODO:
+- [X] Add password,username,email,lore to cookie
+- [X] Add lore to database
+- [X] fix the fucking API Type/Interface
+*/

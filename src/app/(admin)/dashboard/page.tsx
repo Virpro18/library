@@ -7,3 +7,10 @@ const addData = () => {
 }
 
 export default addData;
+
+/*
+TODO:
+- [X] Styling this page
+- [X] Create input data project
+- [X] Create input data admin
+*/

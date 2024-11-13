@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const LoginInput = () => {
-  const Router = useRouter()
+  // const Router = useRouter()
   const [User, setUser] = useState("");
   const [Pass, setPass] = useState("");
 
@@ -21,10 +21,12 @@ const LoginInput = () => {
         body: JSON.stringify({ username: User, password: Pass }),
       }).then((res) => {
         if (res.ok) {
-          Router.push("/dashboard")
+          // Router.push("/dashboard")
+          window.location.href = "/dashboard"
         }
       });
     }
+
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUser(e.target.value);
