@@ -1,12 +1,16 @@
-const addData = () => {
-    return (
-        <h1>
-            Add Data
-        </h1>
-    )
+
+export default function Home() {
+  return (
+    <div className="flex">
+      <div className="w-full">
+        <div className="flex justify-center items-center h-screen">
+          <h1 className="text-3xl font-bold">Dashboard</h1>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default addData;
 
 /*
 TODO:

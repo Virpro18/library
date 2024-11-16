@@ -26,7 +26,7 @@ export const POST = async (req: NextRequest) => {
     secure: true,
     sameSite: "strict",
     path: "/",
-    maxAge: 60,
+    maxAge: 60 * 60 * 24,
   })
   return NextResponse.json({status:"succes"}, { status: 200 });
 };

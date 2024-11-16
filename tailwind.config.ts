@@ -16,6 +16,7 @@ const config: Config = {
           accent:"#7AB2D3",
           secondary:"#4A628A",
           tertiary:"#B9E5E8",
+          
         }
 
       },
