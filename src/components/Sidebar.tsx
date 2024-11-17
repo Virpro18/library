@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { AiOutlineMenu, AiOutlineClose, AiOutlineHome, AiOutlineUser, AiOutlineSetting } from "react-icons/ai";
+import { AiOutlineMenu, AiOutlineClose, AiOutlineHome, AiOutlineUser, AiOutlineSetting, } from "react-icons/ai";
+import { CiLogout } from "react-icons/ci";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -81,6 +82,10 @@ const Sidebar = () => {
             </li>
           ))}
         </ul>
+      <button className="absolute bottom-5 z-50 text-white flex items-center gap-2 left-5 ">
+          <CiLogout/>
+          <p>Logout</p>
+      </button>
       </div>
 
       {/* Margin kiri pada konten utama untuk mengakomodasi sidebar di desktop view */}
