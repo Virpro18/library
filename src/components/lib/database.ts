@@ -15,7 +15,7 @@ async function fetchData(url: string, data: unknown) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
-    cache: "no-cache",
+    next:{revalidate:300}
   });
 
   if (!response.ok) {

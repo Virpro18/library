@@ -2,7 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { AiOutlineMenu, AiOutlineClose, AiOutlineHome, AiOutlineUser, AiOutlineSetting, } from "react-icons/ai";
+import {
+  AiOutlineMenu,
+  AiOutlineClose,
+  AiOutlineHome,
+  AiOutlineUser,
+  AiOutlineSetting,
+} from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -10,7 +16,11 @@ import Link from "next/link";
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: <AiOutlineHome /> },
   { href: "/dashboard/add", label: "Users", icon: <AiOutlineUser /> },
-  { href: "/dashboard/settings", label: "Settings", icon: <AiOutlineSetting /> },
+  {
+    href: "/dashboard/settings",
+    label: "Settings",
+    icon: <AiOutlineSetting />,
+  },
 ];
 
 const Sidebar = () => {
@@ -31,7 +41,6 @@ const Sidebar = () => {
 
   return (
     <div className="flex">
-      {/* <div className="w-screen"></div> */}
       {/* Overlay untuk mobile view */}
       {isOpen && (
         <div
@@ -82,10 +91,10 @@ const Sidebar = () => {
             </li>
           ))}
         </ul>
-      <button className="absolute bottom-5 z-50 text-white flex items-center gap-2 left-5 ">
-          <CiLogout/>
+        <button className="p-3 rounded-md absolute bottom-5 z-50 text-white flex items-center gap-2 left-5 hover:bg-gray-800">
+          <CiLogout />
           <p>Logout</p>
-      </button>
+        </button>
       </div>
 
       {/* Margin kiri pada konten utama untuk mengakomodasi sidebar di desktop view */}
