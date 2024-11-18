@@ -31,6 +31,21 @@ export const POST = async (req: NextRequest) => {
   return NextResponse.json({status:"succes"}, { status: 200 });
 };
 
+
+export async function GET() {
+  // Menghapus cookie token
+  const response = NextResponse.json({ message: "Logout successful" });
+  response.cookies.set("admin", "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    expires: new Date(0), // Mengatur cookie kadaluarsa
+    path: "/",
+  });
+
+  return response;
+}
+
+
 /*
 TODO:
 - [X] Add password,username,email,lore to cookie

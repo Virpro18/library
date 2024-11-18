@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   AiOutlineMenu,
   AiOutlineClose,
@@ -28,8 +29,26 @@ const Sidebar = () => {
   const pathname = usePathname();
   const activeLinkRef = useRef<HTMLLIElement | null>(null);
   const [highlightStyle, setHighlightStyle] = useState({ top: 0, height: 0 });
+  const router = useRouter()
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("/api/database/adminData", {
+        method: "GET",
+      });
+
+      if (response.ok) {
+        // Redirect ke halaman login setelah logout
+        router.push("/verify");
+      } else {
+        console.error("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
   // Update posisi highlight saat URL berubah
   useEffect(() => {
@@ -91,7 +110,10 @@ const Sidebar = () => {
             </li>
           ))}
         </ul>
-        <button className="p-3 rounded-md absolute bottom-5 z-50 text-white flex items-center gap-2 left-5 hover:bg-gray-800">
+        <button
+          className="p-3 rounded-md absolute bottom-5 z-50 text-white flex items-center gap-2 left-5 hover:bg-gray-800"
+          onClick={handleLogout}
+        >
           <CiLogout />
           <p>Logout</p>
         </button>
